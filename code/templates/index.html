@@ -1,0 +1,63 @@
+{% extends "base.html" %} {% block content %}
+<div class="d-flex flex-column align-items-center">
+  <h1 class="text-primary mt-4">{{ subject }}{{ group_name }}</h1>
+
+  <div class="container mt-4">
+    <div class="row g-4">
+      {% for student in students | sort(attribute="name") %}
+      <div
+        class="col-lg-3 col-md-4 col-sm-6 col-12 d-flex justify-content-center"
+      >
+        <div class="card" style="width: 16rem">
+          <div class="card-header text-success">
+            {{ macros.add_badge(student) }} {{ student.name | title }}
+          </div>
+          <ul class="list-group list-group-flush">
+            <li
+              class="list-group-item {% if student.gender | lower == 'female' %} text-danger {% else %} text-info {% endif %}"
+            >
+              {{ student.gender }}
+            </li>
+            <li class="list-group-item">{{ student.age }}</li>
+            <li class="list-group-item">
+              <a class="our-link" href="/resume">Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<h1>Filter Students by Grade</h1>
+<form method="post">
+    <label for="min_grade">Minimum Grade:</label>
+    <input type="number" id="min_grade" name="min_grade" min="0" max="100" required><br><br>
+    <button type="submit">Filter</button>
+</form>
+
+<h1>Students Information</h1>
+<div class="container">
+    {% set filtered_students = students | selectattr("grade", "ge", min_grade|default(0)|int) %}
+    {% if filtered_students | list %}
+    {% for student in students | sort(attribute="name") %}
+    <div class="card" style="width: 18rem; margin-bottom: 10px;">
+        <div class="card-header">
+            {{ student.name }}
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Email: {{ student.email }}</li>
+            <li class="list-group-item">Age: {{ student.age }}</li>
+            <li class="list-group-item">Gender: {{ student.gender }}</li>
+            <li class="list-group-item">Grade: {{ student.grade }}</li>
+        </ul>
+    </div>
+    {% endfor %}
+    {% else %}
+        <p>No students found with the specified grade filter.</p>
+    {% endif %}
+</div>
+
+<script src="{{ url_for('static', filename='scripts/my_script.js') }}"></script>
+{% endblock %}

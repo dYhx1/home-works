@@ -1,0 +1,2 @@
+{% macro add_badge(student)%} {% set letter = "v" %} {% if student.name | lower|
+first == letter %} 😉 {% else %} 🦦 {% endif %} {% endmacro %}

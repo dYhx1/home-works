@@ -1,0 +1,19 @@
+<footer class="d-flex justify-content-between align-items-center">
+  <div class="text">© <span id="footer-year"></span> Група Goiteens</div>
+  <div class="text"><a href="/politics">Політика конфіденційності</a></div>
+  <div>
+    <img
+      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original-wordmark.svg"
+      class="footer-images"
+    />
+  </div>
+</footer>
+
+<script>
+  let year = new Date().getFullYear();
+  console.log(`Рік: ${year}`);
+  //const element = document.getElementById("footer-year");
+  //console.log("Наш елемент: ", element);
+  //console.log("Наш документ: ", document);
+  document.getElementById("footer-year").innerHTML = year;
+</script>
