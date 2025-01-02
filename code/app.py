@@ -1,11 +1,21 @@
-from flask import Flask, render_template, request, redirect
+import sqlite3
+from db import cursor
+from helper_db import select_data, insert_execution, insert_multiple_execution
 
-app = Flask(__name__)
 
-subject = "Python"
+conn = sqlite3.connect('school.db')
+cursor = conn.cursor()
 
-group_name = "1y_16_11_05_24"
-
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS students (
+    student_id INTEGER PRIMARY KEY,
+    name TEXT,
+    gender TEXT,
+    age INTEGER
+    )
+    ''')
+    
+    
 students = [
     {"name": "Sophia f", "gender": "female", "age": 15},
     {"name": "Semen", "gender": "male", "age": 13},
@@ -16,57 +26,39 @@ students = [
 ]
 
 
-# id list(email password)
-users_dict = {}
+for student in students:
+    cursor.execute('''
+    INSERT INTO students (name, gender, age)
+    VALUES (?, ?, ?)
+    ''', (student['name'], student['gender'], student['age']))
 
+conn.commit()
 
-@app.route("/", methods=["GET"])
-def index():
-    # for stud in students:
-    #     stud["name"] = stud["name"].upper()
-    # students.sort(key=lambda element: element["age"])
-    context = {
-        "title": "GoIteens",
-        "subject": subject,
-        "group_name": group_name,
-        "students": students,
-    }
-    return render_template("index.html", students=students)
+def display_students():
+    cursor.execute('''
+    SELECT * FROM students
+    ''')
+    students = cursor.fetchall()
+    
+    for student in students:
+        print(f"Name: {student[1]}, Gender: {student[2]}, Age: {student[3]}")
 
-@app.route("/resume")
-def get_resume():
-    return render_template("./resume.html")
+display_students()
+# developers_insert_execution("Sofiia", "sofiia.fedorenko@gmail.com", "2024-12-15", 200.5)
+# developers_insert_execution("Vlad", "vlad.khmara@gmail.com", "2024-12-15", 200.5)
 
-@app.route('/students', methods=['GET', 'POST'])
-def students():
-    min_grade = request.form.get("min_grade", 0)
-    return render_template("students.html", min_grade=min_grade)
+# records = [
+#     ("Vova", "vova.stepanenko@gmail.com", "2024-12-15", 200.5),
+#     ("Semen", "semen.savenkov@gmail.com", "2024-12-15", 200.5),
+# ]
 
-@app.route("/users", methods=["GET"])
-def get_users():
-    return users_dict
+# insert_multiple_execution(records)
 
+records = select_data("developers", 3)
 
-@app.route("/signin", methods=["POST", "GET"])
-def login():
-    if request.method == "POST":
-        user_email = request.form["user-email"]
-        user_password = request.form["user-password"]
+print(records)
 
-        print(
-            "user_email тут на бекенді отримав з фронтенд: ", user_email, user_password
-        )
+# for record in records:
+#     print(record[1])
 
-        users_dict.update({len(users_dict): (user_email, user_password)})
-
-        return redirect("/users")
-    return render_template("./login.html")
-
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template("./error.html", error=error)
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+cursor.close()
