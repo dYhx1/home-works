@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-column align-items-center">
+  <h1 class="text-primary mt-4">{{ subject }} {{ group_name }}</h1>
+
+  <div class="container mt-4">
+    <div class="row g-4">
+      {% for student in students %}
+      <div class="col-lg-3 col-md-4 col-sm-6 col-12 d-flex justify-content-center">
+        <div class="card" style="width: 16rem">
+          <div class="card-header text-success">{{ student.name }}</div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item {% if student.gender == 'female' %} text-danger {% else %} text-info {% endif %}">
+              {{ student.gender }}
+            </li>
+            <li class="list-group-item">Age: {{ student.age }}</li>
+            <li class="list-group-item">
+              Grade:
+              {% if 90 <= student.average_score <= 100 %}
+                A (Відмінно)
+              {% elif 80 <= student.average_score < 90 %}
+                B (Добре)
+              {% elif 61 <= student.average_score < 80 %}
+                C (Задовільно)
+              {% elif 51 <= student.average_score < 61 %}
+                D (Мінімально)
+              {% else %}
+                F (Незадовільно)
+              {% endif %}
+            </li>
+            <li class="list-group-item">
+              <a class="our-link" href="/resume">Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<h1>Users Information</h1>
+    <div class="container">
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">
+                {{ students.name }}
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Email: {{ student.email }}</li>
+                <li class="list-group-item">Age: {{ student.age }}</li>
+                <li class="list-group-item">Gender: {{ student.gender }}</li>
+                <li class="list-group-item">Password: {{ student.password }}</li>
+            </ul>
+        </div>
+    </div>
+
+<h1>Login Page</h1>
+<form action="{{ url_for('login') }}" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required><br><br>
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<script src="{{ url_for('static', filename='scripts/my_script.js') }}"></script>
+{% endblock %}
