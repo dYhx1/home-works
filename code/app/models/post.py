@@ -10,4 +10,4 @@ class Post(db.Model):
     text = db.Column(db.String, nullable=True)
     date = db.Column(db.Date, default=datetime.now(), nullable=False)
 
-    user = db.relationship("User", back_populates="Post")
+    user = db.relationship("User", back_populates="posts")

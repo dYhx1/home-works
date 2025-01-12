@@ -10,4 +10,4 @@ class User(db.Model):
     email = db.Column(db.String(320), unique=True)
     created_at = db.Column(db.Date, default=datetime.now())
 
-    posts = db.relationship("Post", back_populates="User", cascade="all")
+    posts = db.relationship("Post", back_populates="user", cascade="all")
