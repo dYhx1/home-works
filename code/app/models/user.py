@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class User(db.Model):
-    __tablename__ = "user"  # Це на дз
+    __tablename__ = "user" 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
     surname = db.Column(db.String(50))
